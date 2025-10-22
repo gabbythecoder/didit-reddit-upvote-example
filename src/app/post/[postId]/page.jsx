@@ -3,6 +3,23 @@ import { CommentList } from "@/components/CommentList";
 import { Vote } from "@/components/Vote";
 import { db } from "@/db";
 
+//metadata for dynamic page
+export async function generateMetadata({ params }) {
+  const postId = params.postId;
+
+  const { rows: posts } = await db.query(
+    `SELECT title FROM posts WHERE id = $1`,
+    [postId]
+  );
+
+  const post = posts[0];
+
+  return {
+    title: `Post - ${postId}`,
+    description: `${post.title}`,
+  };
+}
+
 export default async function SinglePostPage({ params }) {
   const postId = params.postId;
 
